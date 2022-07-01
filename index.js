@@ -15,6 +15,14 @@ app.use(express.json()); //req.body
 
 //ROUTES//
 
+app.get("/", async (req, res) => {
+  try {
+    res.json(200);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 //create a Proposal
 
 app.post("/proposals", async (req, res) => {
