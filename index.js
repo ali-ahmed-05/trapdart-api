@@ -46,7 +46,7 @@ app.post("/proposals", async (req, res) => {
     }
 
     res.json(result);
-    console.log(req.body)
+    console.log("result",result)
   } catch (err) {
     console.error("catch post proposals" , err.message);
   }
