@@ -12,12 +12,13 @@ module.exports = async function balance(userAddress) {
 
     
     let contractaddress = trapDart_addr;
+    
     console.log(contractaddress)
     // contractaddress = ethers.utils.getAddress(contractaddress);
     // console.log(contractaddress)
     
     let contract = new ethers.Contract(contractaddress, abi, provider);
-    let tx = await contract.balanceOf(userAddress)
+    let tx = await contract.balanceOf(userAddress,byte32("azadi"))
     console.log(tx)
     return await tx.toString()
 }
