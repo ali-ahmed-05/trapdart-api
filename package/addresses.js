@@ -1,7 +1,7 @@
+const crowdsale_addr = "0xC0e26bc98c6DA4524FAC681638E83571274a1951"
+const trapDart_addr = "0x02004Ca01509BF0D0085D3683f5bbaf1522f0d12"
+const vesting_addr = "0x625e51F0D82BE919180bC161A90d9d698137196c"
+const nFT_addr = "0x0d264ea49A7823Ac4525919a110f915a559101B3"
 
-const crowdsale_addr = "0x461cCEF6B83c792158A4AE6f7a8B7f86497729C3"
-const trapDart_addr = "0x27a08293C88752B3F9d7EB5521959d211844eBb5"
-const vesting_addr = "0xBDe47d0cA935B5E31b51D655fDf17d51906E6aCc"
-const nFT_addr = "0x4e4bCb921c62D94199E254D7B79Fd465Cb36A7f9"
 
 module.exports = { trapDart_addr }
