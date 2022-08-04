@@ -29,8 +29,8 @@ const createStroke =  async (req, res) => {
 }
 
 
-//@desc     create stroke
-//@route    POST /api/strokes
+//@desc     update stroke
+//@route    PUT /api/strokes
 //@access   Public
 
 const updateStroke =  async (req, res) => {
