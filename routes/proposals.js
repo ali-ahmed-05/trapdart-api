@@ -19,7 +19,7 @@ proposalRouter
     .delete(deleteSingleProposal)
 
 proposalRouter
-    .route('/:type')
+    .route('/type/:type')
     .get(getTypeProposals)
 
 

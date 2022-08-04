@@ -55,10 +55,10 @@ const getAllProposals = async (req, res) => {
 const getTypeProposals = async (req, res) => {
     try {
         console.log("PARAMS",req.params)
-        // const {type} = req.params;
-        // const allProposals = await pool.query("SELECT * FROM proposals WHERE vote_type = $1",
-        // [type]);
-        // res.status(200).send(allProposals.rows);
+        const {type} = req.params;
+        const allProposals = await pool.query("SELECT * FROM proposals WHERE vote_type = $1",
+        [type]);
+        res.status(200).send(allProposals.rows);
     } catch (err) {
         console.log(req.params)
         console.error('error occurred while getting proposals', err);
