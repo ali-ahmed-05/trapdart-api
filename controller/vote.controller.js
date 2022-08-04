@@ -1,6 +1,6 @@
 const {ethers} = require("ethers");
 const callRaw = require("../services/callRaw");
-const pool = require("../db");
+const pool = require("../db/pool");
 
 //@desc     create vote
 //@route    POST /api/votes/:id
@@ -8,26 +8,27 @@ const pool = require("../db");
 
 const createVote = async (req, res) => {
     try {
-        const {voter, vote_status, signature} = req.body;
+        const {proposals_id, voter_address, selected_option, signature} = req.body;
         const {id} = req.params;
 
-        const message = "Casting a vote"
+        // const message = "Casting a vote"
 
-        const recoveredAddress = ethers.utils.verifyMessage(message, signature)
+        // const recoveredAddress = ethers.utils.verifyMessage(message, signature)
 
-        let result = await callRaw(voter)
+        // let result = await callRaw(voter)
+        let result = null;
 
-        if (recoveredAddress !== voter) {
-            return res.status(401).send({status: false, message: 'Caller is not the owner'})
-        }
+        // if (recoveredAddress !== voter) {
+        //     return res.status(401).send({status: false, message: 'Caller is not the owner'})
+        // }
 
-        if (result === "0") {
-            return res.status(401).send({status: false, message: 'Insufficient STZ balance'})
-        }
+        // if (result === "0") {
+        //     return res.status(401).send({status: false, message: 'Insufficient STZ balance'})
+        // }
 
         const vote = await pool.query(
-            "SELECT voter FROM votes WHERE proposal_id = $1 AND voter = $2",
-            [id, voter]
+            "SELECT * FROM votes WHERE proposals_id = $1 AND voter_address = $2",
+            [proposals_id, voter_address]
         );
         result = vote.rows[0]
 
@@ -36,41 +37,37 @@ const createVote = async (req, res) => {
         }
 
         const newVote = await pool.query(
-            "INSERT INTO votes (proposal_id,voter,vote_status) VALUES($1,$2,$3) RETURNING *",
-            [id, voter, vote_status]
+            "INSERT INTO votes (proposals_id,voter_address,selected_option) VALUES($1,$2,$3) RETURNING *",
+            [proposals_id, voter_address, selected_option]
         );
 
-        let total_votes = await pool.query(
-            "SELECT total_votes FROM proposal WHERE proposal_id = $1",
-            [id]
+        const records = await pool.query(
+            "SELECT total_votes,options FROM proposals WHERE id = $1",
+            [proposals_id]
         );
-        total_votes = total_votes.rows[0].total_votes
-        total_votes++
 
-        let total_passed = await pool.query(
-            "SELECT total_passed FROM proposal WHERE proposal_id = $1",
-            [id]
+
+        let totalVotes = Number(records.rows[0].total_votes) + 1;
+        let options = {
+            ...records.rows[0].options,
+            [selected_option]: Number(records.rows[0].options[selected_option]) + 1
+        };
+
+        // console.log(options);
+
+        const update = await pool.query(
+            "UPDATE proposals SET total_votes = $1, options= $2 WHERE id = $3;",
+            [totalVotes, options, proposals_id]
         );
-        total_passed = total_passed.rows[0].total_passed
-        total_passed++
 
-        if (vote_status) {
-            const update = await pool.query(
-                "UPDATE proposal SET total_votes = $1, total_passed= $2 WHERE proposal_id = $3;",
-                [total_votes, total_passed, id]
-            );
+        if (update.rowCount > 0) {
+            res.status(200).send({status: true, message: 'successfully voted'});
         } else {
-            const update = await pool.query(
-                "UPDATE proposal SET total_votes = $1 WHERE proposal_id = $2;",
-                [total_votes, id]
-            );
+            res.status(200).send({status: true, message: 'some error occurred'});
         }
-
-        result = newVote.rows[0];
-
-        res.json(result);
     } catch (err) {
-        console.error(`error occurred while creating vote`);
+        res.status(400).send({status: false, message: err.message});
+        console.error(err);
     }
 }
 
@@ -81,14 +78,13 @@ const createVote = async (req, res) => {
 const getVote = async (req, res) => {
     try {
         const {id} = req.params;
-        const {voter} = req.body;
         const vote = await pool.query(
-            "SELECT voter FROM votes WHERE proposal_id = $1 AND voter = $2",
-            [id, voter]
+            "SELECT voter_address FROM votes WHERE id = $1",
+            [id]
         );
-
         res.json(vote.rowCount);
     } catch (err) {
+        res.status(400).send({status: false, message: err.message});
         console.error(err.message);
     }
 }
@@ -101,8 +97,13 @@ const deleteVote = async (req, res) => {
     try {
         const {id} = req.params;
         const deleteTodo = await pool.query("DELETE FROM votes where id = $1", [id]);
-        res.json("votes was deleted!");
+        if (deleteTodo.rowCount > 0)
+            res.status(200).send({status: true, message: 'vote successfully deleted'})
+        else {
+            res.status(200).send({status: false, message: 'vote does not exist'})
+        }
     } catch (err) {
+        res.status(400).send({status: false, message: err.message});
         console.log(err.message);
     }
 }

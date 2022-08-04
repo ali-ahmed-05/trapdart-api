@@ -1,5 +1,7 @@
 const {ethers} = require("ethers");
-const pool = require("../db");
+const pool = require("../db/pool");
+const moment = require("moment");
+// const db = require("../db");
 
 
 //@desc     create proposal
@@ -7,27 +9,28 @@ const pool = require("../db");
 //@access   Public
 const createProposal = async (req, res) => {
     try {
-        const {title, ipfs, description, signature} = req.body;
+        const {title, description, options, image, vote_type,closing_date, signature} = req.body;
+
         const message = "Add the proposal"
         const owner_address = process.env.owner_address
 
-        const recoveredAddress = ethers.utils.verifyMessage(message, signature)
-        console.log("RECOVERED_ADDRESS", recoveredAddress)
+        // const recoveredAddress = ethers.utils.verifyMessage(message, signature)
+        // console.log("RECOVERED_ADDRESS", recoveredAddress)
 
-        if (owner_address !== recoveredAddress)
-            return res.status(401).send({error: 'Unauthorized Owner'})
+        // if (owner_address !== recoveredAddress)
+        //     return res.status(401).send({error: 'Unauthorized Owner'})
 
         const newProposal = await pool.query(
-            "INSERT INTO proposal (title,ipfs, description,total_votes,total_passed) VALUES($1,$2,$3,$4,$5) RETURNING *",
-            [title, ipfs, description, 0, 0]
+            "INSERT INTO proposals (title, description,options,image,vote_type, closing_date) VALUES($1,$2,$3,$4,$5, $6) RETURNING *",
+            [title, description, options, image, vote_type, closing_date]
         );
 
         const result = newProposal.rows[0];
 
-        res.status(200).send(result);
-        console.log('RESULT', result)
+        res.status(201).send(result);
     } catch (err) {
-        console.error("Creating Proposal Error occurred", err.message);
+        res.status(400).send({status: false, message: err.message});
+        console.error('Error:', err.message);
     }
 }
 
@@ -37,10 +40,10 @@ const createProposal = async (req, res) => {
 
 const getAllProposals = async (req, res) => {
     try {
-        const allProposals = await pool.query("SELECT * FROM proposal");
+        const allProposals = await pool.query("SELECT * FROM proposals");
         res.status(200).send(allProposals.rows);
     } catch (err) {
-        console.error('Error ');
+        console.error('error occurred while getting proposals', err);
     }
 }
 
@@ -53,13 +56,14 @@ const getSingleProposal = async (req, res) => {
         const {id} = req.params;
 
         const proposal = await pool.query(
-            "SELECT * FROM proposal WHERE proposal_id = $1",
+            "SELECT * FROM proposals WHERE id = $1",
             [id]
         );
 
         res.status(200).send(proposal.rows[0]);
     } catch (err) {
-        console.error(`get Single Proposal error occured ${err}`);
+        res.status(400).send({status: false, message: err.message});
+        console.log(err);
     }
 }
 
@@ -70,14 +74,23 @@ const getSingleProposal = async (req, res) => {
 const deleteSingleProposal = async (req, res) => {
     try {
         const {id} = req.params;
-        const deleteTodo = await pool.query("DELETE FROM proposal WHERE id = $1", [id]);
 
-        console.log('DELETE_TODO', deleteTodo)
+        console.log(id);
 
-        res.status(200).send('Proposal was deleted!')
+        const record = await pool.query('SELECT * FROM proposals WHERE id = $1', [id]);
+
+        if(record.rowCount > 0) {
+            const deleteTodo = await pool.query("DELETE FROM proposals WHERE id = $1", [id]);
+            if(deleteTodo.rowCount)
+                res.status(200).send({status: true, message: 'proposal successfully deleted '});
+        }else {
+            res.status(200).send({status: true, message: 'proposal does not exist'});
+        }
+
 
     } catch (err) {
-        console.log(`Error occurred while deleting proposal ${err}`);
+        res.status(400).send({status: false, message: err.message});
+        console.log(err);
     }
 };
 
