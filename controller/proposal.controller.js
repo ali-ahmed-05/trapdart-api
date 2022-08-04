@@ -47,6 +47,24 @@ const getAllProposals = async (req, res) => {
     }
 }
 
+
+//@desc     get All Proposals
+//@route    GET /api/proposals/:type
+//@access   Public
+
+const getTypeProposals = async (req, res) => {
+    try {
+        console.log("PARAMS",req.params)
+        // const {type} = req.params;
+        // const allProposals = await pool.query("SELECT * FROM proposals WHERE vote_type = $1",
+        // [type]);
+        // res.status(200).send(allProposals.rows);
+    } catch (err) {
+        console.log(req.params)
+        console.error('error occurred while getting proposals', err);
+    }
+}
+
 //@desc     get Single Proposal
 //@route    GET /api/proposals/:id
 //@access   Public
@@ -94,4 +112,4 @@ const deleteSingleProposal = async (req, res) => {
     }
 };
 
-module.exports = {createProposal, getAllProposals, getSingleProposal, deleteSingleProposal}
+module.exports = {createProposal, getAllProposals, getSingleProposal, deleteSingleProposal , getTypeProposals}

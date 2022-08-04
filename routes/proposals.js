@@ -2,7 +2,8 @@ const {
     createProposal,
     getAllProposals,
     getSingleProposal,
-    deleteSingleProposal
+    deleteSingleProposal,
+    getTypeProposals
 } = require("../controller/proposal.controller");
 const proposalRouter = require('express').Router();
 
@@ -16,6 +17,10 @@ proposalRouter
     .route('/:id')
     .get(getSingleProposal)
     .delete(deleteSingleProposal)
+
+proposalRouter
+    .route('/:type')
+    .get(getTypeProposals)
 
 
 module.exports = proposalRouter;
