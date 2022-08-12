@@ -37,6 +37,7 @@ const updateStroke =  async (req, res) => {
     try{
         const {proposal_ids} = req.body;
         const {id} = req.params;
+        
 
         console.log(proposal_ids);
 
