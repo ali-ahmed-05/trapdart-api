@@ -1,4 +1,4 @@
-const {createStroke, getAllStrokes,updateStroke} = require("../controller/strokes.controller");
+const {createStroke, getAllStrokes,updateStroke, getProposalsByStroke} = require("../controller/strokes.controller");
 const strokesRouter = require('express').Router();
 
 strokesRouter
@@ -9,6 +9,7 @@ strokesRouter
 strokesRouter
     .route('/:id')
     .put(updateStroke)
+    .get(getProposalsByStroke)
 
 
 module.exports = strokesRouter
