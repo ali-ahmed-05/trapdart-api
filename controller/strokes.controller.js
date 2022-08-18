@@ -36,14 +36,18 @@ const updateStroke = async (req, res) => {
     try {
         const {proposal_ids} = req.body;
         const {id} = req.params;
+
+        const ids = JSON.stringify(proposal_ids)
+        const proposalIds = proposal_ids.map(id => `'${id}'`).join(',')
+
+    
+
         
-
-        console.log(proposal_ids);
-
-        const ids = JSON.stringify(proposal_ids);
+        const _data = await pool.query(`UPDATE votes SET voter_address = $1 WHERE proposals_id IN (${proposalIds})`,[""]);
 
         const data = await pool.query("UPDATE strokes SET proposal_ids = $1 WHERE id =$2 RETURNING *", [ids, id]);
 
+        
         if (data.rowCount > 0) {
             res.status(200).send({status: true, message: 'stoke successfully Updated'});
         } else {
@@ -94,4 +98,19 @@ const getProposalsByStroke = async (req, res) => {
     }
 }
 
-module.exports = {createStroke, getAllStrokes, updateStroke, getProposalsByStroke}
+const getSortedVoted = async (req, res) => {
+    const { id } = req.params;
+
+    console.log('ID', id);
+
+    const result = await pool.query(`SELECT * FROM strokes WHERE id=$1`, [id])
+    const { proposal_ids } = result.rows[0];
+
+    const proposalIds = proposal_ids.map(id => `'${id}'`).join(',')
+
+    const voteResult = await pool.query(`SELECT * FROM proposals WHERE id IN (${proposalIds}) ORDER BY total_votes LIMIT 3`);
+
+    res.status(200).send(voteResult.rows);
+}
+
+module.exports = {createStroke, getAllStrokes, updateStroke, getProposalsByStroke,getSortedVoted}
