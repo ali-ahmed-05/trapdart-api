@@ -35,13 +35,13 @@ const createStroke = async (req, res) => {
 const updateStroke = async (req, res) => {
     try {
         const {proposal_ids} = req.body;
-        const {id} = req.params;
+        const {id : strokeId} = req.params;
 
-        const ids = JSON.stringify(proposal_ids)
+        const stringifyIDs = JSON.stringify(proposal_ids)
         const proposalIds = proposal_ids.map(id => `'${id}'`).join(',')
         
         const _data = await pool.query(`UPDATE votes SET voter_address = $1 WHERE proposals_id IN (${proposalIds})`,[""]);
-        const data = await pool.query("UPDATE strokes SET proposal_ids = $1 WHERE id =$2 RETURNING *", [ids, id]);
+        const data = await pool.query("UPDATE strokes SET proposal_ids = $1 WHERE id = $2", [stringifyIDs, strokeId]);
 
         
         if (data.rowCount > 0) {
@@ -61,8 +61,8 @@ const updateStroke = async (req, res) => {
 
 const getAllStrokes = async (req, res) => {
     try {
-        const records = await pool.query('SELECT * FROM strokes');
-        console.log(records);
+        const records = await pool.query('SELECT * FROM strokes ORDER BY id');
+        console.log(records.rows);
         res.status(200).send(records.rows);
     } catch (e) {
         res.status(400).send({status: false, message: e.message});
@@ -97,14 +97,14 @@ const getProposalsByStroke = async (req, res) => {
 const getSortedVoted = async (req, res) => {
     const { id } = req.params;
 
-    console.log('ID', id);
-
     const result = await pool.query(`SELECT * FROM strokes WHERE id=$1`, [id])
     const { proposal_ids } = result.rows[0];
 
-    const proposalIds = proposal_ids.map(id => `'${id}'`).join(',')
+    const proposalIds = proposal_ids.length > 0 && proposal_ids.map(id => `'${id}'`).join(',')
 
-    const voteResult = await pool.query(`SELECT * FROM proposals WHERE id IN (${proposalIds}) ORDER BY total_votes LIMIT 3`);
+    const voteResult = await pool.query(`SELECT * FROM proposals WHERE id IN (${proposalIds}) ORDER BY total_votes DESC LIMIT 3`);
+
+    console.log(voteResult.rows);
 
     res.status(200).send(voteResult.rows);
 }

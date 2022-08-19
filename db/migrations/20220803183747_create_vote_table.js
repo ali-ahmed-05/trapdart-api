@@ -7,7 +7,7 @@ exports.up = async function(knex) {
 
     return knex.schema.createTable('votes', function (t) {
         t.increments('id').primary().defaultTo(1);
-        t.integer('proposals_id').notNullable();
+        t.integer('proposals_id');
         t.string('voter_address').notNullable();
         t.string('selected_option').notNullable();
 
