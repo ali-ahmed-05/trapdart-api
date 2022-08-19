@@ -50,7 +50,7 @@ const createVote = async (req, res) => {
         let totalVotes = Number(records.rows[0].total_votes) + 1;
         let options = {
             ...records.rows[0].options,
-            [selected_option]: Number(records.rows[0].options[selected_option]) + 1
+            [selected_option ]: Number(records.rows[0].options[selected_option]) + 1
         };
 
         // console.log(options);

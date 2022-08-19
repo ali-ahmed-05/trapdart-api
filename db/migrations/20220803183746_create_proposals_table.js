@@ -6,7 +6,7 @@ exports.up = async function (knex) {
     await knex.raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
 
     return knex.schema.createTable('proposals', function (t) {
-        t.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'));
+        t.increments('id').primary().defaultTo(1);
         t.string('title').notNullable()
         t.string('description').nullable()
         t.string('image').nullable()
@@ -23,5 +23,5 @@ exports.up = async function (knex) {
  * @returns {Promise<Knex.SchemaBuilder>}
  */
 exports.down = async function (knex) {
-    return knex.schema.dropTable('proposals');
+    return knex.schema.dropTableIfExists('proposals');
 };

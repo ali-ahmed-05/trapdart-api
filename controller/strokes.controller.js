@@ -39,12 +39,8 @@ const updateStroke = async (req, res) => {
 
         const ids = JSON.stringify(proposal_ids)
         const proposalIds = proposal_ids.map(id => `'${id}'`).join(',')
-
-    
-
         
         const _data = await pool.query(`UPDATE votes SET voter_address = $1 WHERE proposals_id IN (${proposalIds})`,[""]);
-
         const data = await pool.query("UPDATE strokes SET proposal_ids = $1 WHERE id =$2 RETURNING *", [ids, id]);
 
         
