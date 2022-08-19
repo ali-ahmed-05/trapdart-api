@@ -12,6 +12,9 @@ module.exports = {
         database: DB_NAME,
         charset: 'utf8',
         debug: false,
+        ssl: {
+            rejectUnauthorized: false
+          }
     },
     migrations: {
         directory: MIGRATION_DIR
