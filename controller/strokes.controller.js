@@ -99,8 +99,11 @@ const getSortedVoted = async (req, res) => {
 
     const result = await pool.query(`SELECT * FROM strokes WHERE id=$1`, [id])
     const { proposal_ids } = result.rows[0];
+    if( proposal_ids === null ){
+        return res.status(200).send('empty stokes')
+    }
 
-    const proposalIds = proposal_ids.length > 0 && proposal_ids.map(id => `'${id}'`).join(',')
+    const proposalIds = proposal_ids?.length > 0 && proposal_ids.map(id => `'${id}'`).join(',')
 
     const voteResult = await pool.query(`SELECT * FROM proposals WHERE id IN (${proposalIds}) ORDER BY total_votes DESC LIMIT 3`);
 
