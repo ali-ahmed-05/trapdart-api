@@ -3,6 +3,7 @@ const cors = require("cors");
 const proposalRouter = require("./routes/proposals");
 const voteRouter = require("./routes/vote");
 const strokesRouter = require("./routes/strokes");
+const pictureRouter = require("./routes/picture")
 
 require('dotenv').config({path: __dirname + '/.env'})
 
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use('/api/proposals', proposalRouter);
 app.use('/api/votes', voteRouter);
 app.use('/api/strokes', strokesRouter)
+app.use('/api/picture', pictureRouter)
 
 app.listen(PORT, () => {
     console.log(`server has started on port ${PORT}`);

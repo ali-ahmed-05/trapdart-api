@@ -6,12 +6,8 @@ const pool = require("../db/pool");
 
 const createStroke = async (req, res) => {
     try {
-        const {proposal_ids} = req.body;
-
-        console.log(proposal_ids);
-
-        const ids = JSON.stringify(proposal_ids);
-
+        // const {proposal_ids} = req.body;
+        const ids = JSON.stringify([]);
 
         const data = await pool.query("INSERT INTO strokes (proposal_ids) VALUES($1)  RETURNING *", [ids]);
 
@@ -99,7 +95,7 @@ const getSortedVoted = async (req, res) => {
 
     const result = await pool.query(`SELECT * FROM strokes WHERE id=$1`, [id])
     const { proposal_ids } = result.rows[0];
-    if( proposal_ids === null ){
+    if( proposal_ids === null || proposal_ids.length == 0){
         return res.status(200).send('empty stokes')
     }
 
