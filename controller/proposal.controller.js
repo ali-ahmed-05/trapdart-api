@@ -14,11 +14,11 @@ const createProposal = async (req, res) => {
         const message = "Add the proposal"
         const owner_address = process.env.owner_address
 
-        // const recoveredAddress = ethers.utils.verifyMessage(message, signature)
-        // console.log("RECOVERED_ADDRESS", recoveredAddress)
+        const recoveredAddress = ethers.utils.verifyMessage(message, signature)
+        console.log("RECOVERED_ADDRESS", recoveredAddress)
 
-        // if (owner_address !== recoveredAddress)
-        //     return res.status(401).send({error: 'Unauthorized Owner'})
+        if (owner_address.toLowerCase() !== recoveredAddress.toLowerCase())
+            return res.status(401).send({error: 'Unauthorized Owner'})
 
         const newProposal = await pool.query(
             "INSERT INTO proposals (title, description,options,image,vote_type, closing_date) VALUES($1,$2,$3,$4,$5, $6) RETURNING *",

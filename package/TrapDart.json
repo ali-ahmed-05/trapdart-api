@@ -1,5 +1,5 @@
 [
-  "constructor(address,address)",
+  "constructor(address,address,address,address)",
   "event Approval(address indexed,address indexed,uint256)",
   "event OwnershipTransferred(address indexed,address indexed)",
   "event Transfer(address indexed,address indexed,uint256)",

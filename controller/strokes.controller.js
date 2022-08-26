@@ -6,8 +6,21 @@ const pool = require("../db/pool");
 
 const createStroke = async (req, res) => {
     try {
-        // const {proposal_ids} = req.body;
-        const ids = JSON.stringify([]);
+
+         const ids = JSON.stringify([]);
+
+         const {signature} = req.body;
+
+
+         const message = "Adding Stroke"
+         const owner_address = process.env.owner_address
+
+         const recoveredAddress = ethers.utils.verifyMessage(message, signature)
+         console.log("RECOVERED_ADDRESS", recoveredAddress)
+
+        if (owner_address.toLowerCase() !== recoveredAddress.toLowerCase())
+            return res.status(401).send({error: 'Unauthorized Owner'})
+
 
         const data = await pool.query("INSERT INTO strokes (proposal_ids) VALUES($1)  RETURNING *", [ids]);
 
@@ -32,6 +45,18 @@ const updateStroke = async (req, res) => {
     try {
         const {proposal_ids} = req.body;
         const {id : strokeId} = req.params;
+
+        const {signature} = req.body;
+
+
+        const message = "Updating Stroke"
+        const owner_address = process.env.owner_address
+
+        const recoveredAddress = ethers.utils.verifyMessage(message, signature)
+        console.log("RECOVERED_ADDRESS", recoveredAddress)
+
+       if (owner_address.toLowerCase() !== recoveredAddress.toLowerCase())
+           return res.status(401).send({error: 'Unauthorized Owner'})
 
         const stringifyIDs = JSON.stringify(proposal_ids)
         const proposalIds = proposal_ids.map(id => `'${id}'`).join(',')

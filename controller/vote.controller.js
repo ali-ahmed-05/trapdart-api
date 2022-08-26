@@ -11,20 +11,21 @@ const createVote = async (req, res) => {
         const {proposals_id, voter_address, selected_option, signature} = req.body;
         const {id} = req.params;
 
-        // const message = "Casting a vote"
+        const message = "Casting a vote"
 
-        // const recoveredAddress = ethers.utils.verifyMessage(message, signature)
+        const recoveredAddress = ethers.utils.verifyMessage(message, signature)
 
-        // let result = await callRaw(voter)
-        let result = null;
+        let result = await callRaw(voter_address)
+        
+        // let result = null;
 
         // if (recoveredAddress !== voter) {
         //     return res.status(401).send({status: false, message: 'Caller is not the owner'})
         // }
 
-        // if (result === "0") {
-        //     return res.status(401).send({status: false, message: 'Insufficient STZ balance'})
-        // }
+        if (result === "0") {
+            return res.status(401).send({status: false, message: 'Insufficient STZ balance'})
+        }
 
         const vote = await pool.query(
             "SELECT * FROM votes WHERE proposals_id = $1 AND voter_address = $2",

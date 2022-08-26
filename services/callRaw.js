@@ -8,6 +8,8 @@ module.exports = async function balance(userAddress) {
     let abi = TrapDart;
     userAddress = ethers.utils.getAddress(userAddress)
     const node = "https://rinkeby.infura.io/v3/fac3159c48024d38ab778a0bbceace2b";
+    //const node = "http://127.0.0.1:8545/";
+
     const provider =new ethers.providers.JsonRpcProvider(node);
 
     
@@ -18,7 +20,7 @@ module.exports = async function balance(userAddress) {
     // console.log(contractaddress)
     
     let contract = new ethers.Contract(contractaddress, abi, provider);
-    let tx = await contract.balanceOf(userAddress,byte32("azadi"))
+    let tx = await contract.balanceOf(userAddress)
     console.log(tx)
     return await tx.toString()
 }
