@@ -54,10 +54,10 @@ const updateStroke = async (req, res) => {
         const owner_address = process.env.owner_address
 
         const recoveredAddress = ethers.utils.verifyMessage(message, signature)
-        console.log("RECOVERED_ADDRESS", recoveredAddress)
+         console.log("RECOVERED_ADDRESS", recoveredAddress)
 
-       if (owner_address.toLowerCase() !== recoveredAddress.toLowerCase())
-           return res.status(401).send({error: 'Unauthorized Owner'})
+        if (owner_address.toLowerCase() !== recoveredAddress.toLowerCase())
+            return res.status(401).send({error: 'Unauthorized Owner'})
 
         const stringifyIDs = JSON.stringify(proposal_ids)
         const proposalIds = proposal_ids.map(id => `'${id}'`).join(',')
