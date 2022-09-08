@@ -24,9 +24,9 @@ const createVote = async (req, res) => {
         // }
 
         if (result === "0") {
-            return res.status(401).send({status: false, message: 'Insufficient STZ balance'})
+            return res.status(401).send({status: false, message: 'Insufficient TRAP balance'})
         }
-
+        let asd = 0
         const vote = await pool.query(
             "SELECT * FROM votes WHERE proposals_id = $1 AND voter_address = $2",
             [proposals_id, voter_address]
