@@ -22,6 +22,7 @@
   "function maxBuy() view returns (uint256)",
   "function min() view returns (uint256)",
   "function minBuy() view returns (uint256)",
+  "function openRound(uint256) view returns (bool)",
   "function owner() view returns (address)",
   "function rate() view returns (uint256)",
   "function renounceOwnership()",

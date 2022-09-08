@@ -1,10 +1,11 @@
 
- const crowdsale_addr = "0x93da99aDd70cB6B5Ce1e312f9508002C77BB30cC"
- const trapDart_addr = "0x72d70A89Edd37013f4de21210BD30DdC8f60C86B"
- const vesting_addr = "0x055c16C18D5c2FAc6aFd156173A46C07d4Cf357F"
- const nFT_addr = "0x503Eda05283B31bcF374478a4c3D408C4f5A1714"
- const Vesting_dev_addr = "0x60E0e03985df00fdE649d3668606Bee00dA0e4C5"
- const Vesting_treasury_addr = "0x0860267d0753Ef1aFf41f989537Be8246ad01039"
- const Vesting_founder_addr = "0x81aacE711414E16302077472514C84F16566C6ee"
+const crowdsale_addr = "0xD4cfa4C90a9a3f53BEb4E373f1640A18ed90d311"
+const trapDart_addr = "0xD3df010C61917591B75087b73012B83E609f9c9B"
+const vesting_addr = "0xC1207b216FdEC29A4244a828b45CCA977BaC5F6a"
+const nFT_addr = "0x55C441b5f29245fC82719eefF003A9bB26F4e33b"
+const Vesting_dev_addr = "0xb0b02688B83fB073904FCB8eeD90FCf379ba26cc"
+const Vesting_treasury_addr = "0x57D4a7EcB581aDe82aAeE99e2960C267E1F200d4"
+const Vesting_founder_addr = "0xbAaa31b57853B9687c9AE5212cbDa1976B5fc4C2"
+
  
 module.exports = {trapDart_addr}
