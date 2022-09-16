@@ -41,7 +41,7 @@ const createVote = async (req, res) => {
       if (proposals.rowCount !== 0) {
         return res
           .status(401)
-          .send({ status: false, message: "You had already voted" });
+          .send({ status: false, message: "You have already voted" });
       }
     }
 
@@ -72,7 +72,7 @@ const createVote = async (req, res) => {
     if (vote.rowCount !== 0) {
       return res
         .status(401)
-        .send({ status: false, message: "You had already voted" });
+        .send({ status: false, message: "You have already voted" });
     }
 
     const newVote = await pool.query(
