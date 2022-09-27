@@ -9,8 +9,6 @@ const pool = require("../db/pool");
 
 const getPicture = async (req, res) => {
     try {
-
-
         const picture = await pool.query("SELECT * FROM picture");
         res.status(200).send(picture.rows[0]);
     } catch (err) {
@@ -42,6 +40,7 @@ const updatePicture = async (req, res) => {
         const picture = await pool.query("UPDATE picture SET image_url = $1 WHERE id = 1",[image]);
         console.log(picture)
         res.status(200).send({status: true, rowCount: picture.rowCount});
+
     } catch (err) {
         res.status(400).send({status: false, message: err.message});
         console.log(err);
