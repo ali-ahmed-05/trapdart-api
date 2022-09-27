@@ -10,6 +10,7 @@ const pool = new Pool({
   port: DB_PORT,
   database: DB_NAME,
   listen_addresses : '*',
+  timezone: "UTC", 
   ssl: {
     rejectUnauthorized: false
   }

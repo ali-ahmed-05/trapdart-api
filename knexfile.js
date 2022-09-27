@@ -12,6 +12,7 @@ module.exports = {
         database: DB_NAME,
         charset: 'utf8',
         debug: false,
+        timezone: "UTC", 
         ssl: {
             rejectUnauthorized: false
           }
