@@ -2,11 +2,11 @@ const {ethers} = require("ethers");
 const {addresses , contracts} = require("../package/index")
 
 module.exports = async function owner(userAddress) {
-    
+    //https://eth-goerli.alchemyapi.io/v2/GKcZh-E7o6PB3gEz0M9fUHPwG4_xHbbj
 
     let abi = contracts.token;
     userAddress = ethers.utils.getAddress(userAddress)
-    const node = "https://rinkeby.infura.io/v3/fac3159c48024d38ab778a0bbceace2b";
+    const node = "https://eth-goerli.alchemyapi.io/v2/GKcZh-E7o6PB3gEz0M9fUHPwG4_xHbbj";
     const provider =new ethers.providers.JsonRpcProvider(node);
 
     

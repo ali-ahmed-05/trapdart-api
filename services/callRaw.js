@@ -7,7 +7,7 @@ module.exports = async function balance(userAddress) {
 
     let abi = TrapDart;
     userAddress = ethers.utils.getAddress(userAddress)
-    const node = "https://rinkeby.infura.io/v3/fac3159c48024d38ab778a0bbceace2b";
+    const node = "https://eth-goerli.alchemyapi.io/v2/GKcZh-E7o6PB3gEz0M9fUHPwG4_xHbbj";
     //const node = "http://127.0.0.1:8545/";
 
     const provider =new ethers.providers.JsonRpcProvider(node);
