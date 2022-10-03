@@ -1,5 +1,5 @@
 const { ethers } = require("ethers");
-const callRaw = require("../services/callRaw");
+const {balance , payee} = require("../services/callRaw");
 const pool = require("../db/pool");
 
 //@desc     create vote
@@ -17,6 +17,12 @@ const createVote = async (req, res) => {
     } = req.body;
     const { id } = req.params;
 
+    const message = "Casting a vote";
+
+    const recoveredAddress = ethers.utils.verifyMessage(message, signature);
+    let result
+    let typeError
+
     if (strokeId !== 0) {
       const strokes = await pool.query(
         "SELECT proposal_ids FROM strokes WHERE id=$1",
@@ -32,10 +38,20 @@ const createVote = async (req, res) => {
             }, [])
           : [];
 
+      //new code(differenciating votes/stokes votes)
+      
+      if(proposal_ids.length == 0){
+        result = await balance(recoveredAddress);
+        typeError = "Insufficient TRAP balance"
+      }else{
+        result = await payee(recoveredAddress);
+        typeError = "Only ICO participents can vote"
+      }
+
       const proposalIds = proposal_ids.map((id) => `'${id}'`).join(",");
 
       const proposals = await pool.query(
-        `SELECT * FROM votes WHERE voter_address='${voter_address}' AND proposals_id IN (${proposalIds})`
+        `SELECT * FROM votes WHERE voter_address='${recoveredAddress}' AND proposals_id IN (${proposalIds})`
       );
 
       if (proposals.rowCount !== 0) {
@@ -45,11 +61,9 @@ const createVote = async (req, res) => {
       }
     }
 
-    const message = "Casting a vote";
+   
 
-    const recoveredAddress = ethers.utils.verifyMessage(message, signature);
-
-    let result = await callRaw(voter_address);
+    
 
     // let result = null;
 
@@ -60,12 +74,12 @@ const createVote = async (req, res) => {
     if (result === "0") {
       return res
         .status(401)
-        .send({ status: false, message: "Insufficient TRAP balance" });
+        .send({ status: false, message: typeError });
     }
     let asd = 0;
     const vote = await pool.query(
       "SELECT * FROM votes WHERE proposals_id = $1 AND voter_address = $2",
-      [proposals_id, voter_address]
+      [proposals_id, recoveredAddress]
     );
     result = vote.rows[0];
 
@@ -77,7 +91,7 @@ const createVote = async (req, res) => {
 
     const newVote = await pool.query(
       "INSERT INTO votes (proposals_id,voter_address,selected_option) VALUES($1,$2,$3) RETURNING *",
-      [proposals_id, voter_address, selected_option]
+      [proposals_id, recoveredAddress, selected_option]
     );
 
     const records = await pool.query(

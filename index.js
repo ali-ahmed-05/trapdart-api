@@ -4,6 +4,7 @@ const proposalRouter = require("./routes/proposals");
 const voteRouter = require("./routes/vote");
 const strokesRouter = require("./routes/strokes");
 const pictureRouter = require("./routes/picture")
+const textRouter = require("./routes/text")
 
 require('dotenv').config({path: __dirname + '/.env'})
 
@@ -17,6 +18,7 @@ app.use('/api/proposals', proposalRouter);
 app.use('/api/votes', voteRouter);
 app.use('/api/strokes', strokesRouter)
 app.use('/api/picture', pictureRouter)
+app.use('/api/text', textRouter)
 
 app.listen(PORT, () => {
     console.log(`server has started on port ${PORT}`);
