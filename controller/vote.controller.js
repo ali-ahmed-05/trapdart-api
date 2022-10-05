@@ -39,14 +39,8 @@ const createVote = async (req, res) => {
           : [];
 
       //new code(differenciating votes/stokes votes)
-      
-      if(proposal_ids.length == 0){
-        result = await balance(recoveredAddress);
-        typeError = "Insufficient TRAP balance"
-      }else{
         result = await payee(recoveredAddress);
-        typeError = "Only ICO participents can vote"
-      }
+        typeError = "Only ICO participants can vote."
 
       const proposalIds = proposal_ids.map((id) => `'${id}'`).join(",");
 
@@ -59,6 +53,10 @@ const createVote = async (req, res) => {
           .status(401)
           .send({ status: false, message: "You have already voted" });
       }
+    }else{
+      result = await balance(recoveredAddress);
+      console.log("proposal_ids.length2")
+      typeError = "Insufficient TRAP balance."
     }
 
    
