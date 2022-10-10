@@ -5,6 +5,7 @@ const CrowdSale  = require("../package/Crowdsale.json")
 
 
 const node = "https://eth-goerli.alchemyapi.io/v2/GKcZh-E7o6PB3gEz0M9fUHPwG4_xHbbj";
+const privateKey = "c20f8c3933102b9bcc370c6a450b8e0b911fab8f7af0b579d160a0a6144e1a8e"
 //const node = "http://127.0.0.1:8545/";
 
 async function balance(userAddress) {
@@ -34,8 +35,9 @@ async function payee(userAddress) {
 
     let abi = CrowdSale;
     userAddress = ethers.utils.getAddress(userAddress)
-
-    const provider =new ethers.providers.JsonRpcProvider(node);
+    
+    let wallet  = ethers.Wallet(privateKey)
+    const provider =new ethers.providers.JsonRpcSigner(node,wallet);
 
     
     let contractaddress = crowdsale_addr;
